@@ -38,19 +38,23 @@ func Init() *Monkey {
 		Jump[i] = int(-0.09054*x*x + 4.255*x)
 	}
 	monkey := new(Monkey)
-	monkey.X = 36
-	monkey.Y = 50
-	monkey.Width = 20
-	monkey.Height = 50
-	monkey.IncJump = -1
-	monkey.IsJumping = false
-	monkey.Direction = false
+	monkey.Reset()
 	if image == nil {
 		image, _ = ebiten.NewImage(monkey.Width, monkey.Height, ebiten.FilterDefault)
 		image.Fill(color.Black)
 	}
 	monkey.Image = image
 	return monkey
+}
+
+func (m *Monkey) Reset() {
+	m.X = 36
+	m.Y = 50
+	m.Width = 20
+	m.Height = 50
+	m.IncJump = -1
+	m.IsJumping = false
+	m.Direction = false
 }
 
 func (m *Monkey) InitJump(direction bool) {

@@ -13,11 +13,11 @@ import (
 )
 
 var background *ebiten.Image
-var turtleImage *ebiten.Image
-var drawOptions *ebiten.DrawImageOptions
+var backgroundDrawOptions *ebiten.DrawImageOptions
 var maxSinkingTurtles int = 1
 var turtleDrawImageOptions ebiten.DrawImageOptions
 var monkeyDrawImageOptions ebiten.DrawImageOptions
+var selectedTurtle int
 var turtles [4]turtle.Turtle
 var theMonkey monkey.Monkey
 
@@ -41,12 +41,9 @@ func init() {
 	theMonkey = *monkey.Init()
 
 	for i := 0; i < len(turtles); i++ {
-		turtles[i] = turtle.BuildTurtle()
-		turtles[i].X = i * 45
+		turtles[i] = turtle.Init()
+		turtles[i].X = i*45 + 72
 	}
-
-	turtleImage, _ = ebiten.NewImage(turtles[0].Width, turtles[1].Height, ebiten.FilterDefault)
-	turtleImage.Fill(color.RGBA{0, 200, 0, 255})
 
 	background, _ = ebiten.NewImage(320, 200, ebiten.FilterDefault)
 	background.Fill(color.White)
@@ -65,15 +62,13 @@ func init() {
 
 }
 
-var selectedTurtle int
-
 func update(screen *ebiten.Image) error {
 
 	if ebiten.IsDrawingSkipped() {
 		return nil
 	}
 	//The background
-	screen.DrawImage(background, drawOptions)
+	screen.DrawImage(background, backgroundDrawOptions)
 
 	//The turtles
 	if countSinkingTurtle(turtles) < maxSinkingTurtles {
@@ -91,8 +86,8 @@ func update(screen *ebiten.Image) error {
 				turtles[i].Sink()
 			}
 		}
-		turtleDrawImageOptions.GeoM.Translate(float64(72+turtles[i].X), float64(turtles[i].Y))
-		screen.DrawImage(turtleImage, &turtleDrawImageOptions)
+		turtleDrawImageOptions.GeoM.Translate(float64(turtles[i].X), float64(turtles[i].Y))
+		screen.DrawImage(turtles[i].Image, &turtleDrawImageOptions)
 	}
 	//The monkey
 	monkeyDrawImageOptions.GeoM.Reset()
@@ -100,12 +95,18 @@ func update(screen *ebiten.Image) error {
 	screen.DrawImage(theMonkey.Image, &monkeyDrawImageOptions)
 	if theMonkey.IsJumping {
 		theMonkey.Jump()
+	} else {
+		if !isMonkeyOnGround() {
+			//todo: monkey die
+			//todo: one live less
+			//monkey reinit
+			theMonkey.Reset()
+		}
 	}
 
 	//input poller
-
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		if !theMonkey.IsJumping {
+		if !theMonkey.IsJumping && isMonkeyOnGround() {
 			theMonkey.InitJump(true)
 		}
 	}
@@ -115,6 +116,26 @@ func update(screen *ebiten.Image) error {
 		}
 	}
 	return nil
+}
+
+func isMonkeyOnGround() bool {
+	result := false
+	if theMonkey.Y == 50 {
+		if theMonkey.X < 70 {
+			result = true
+		} else if theMonkey.X+theMonkey.Width > 320-70 {
+			result = true
+		} else {
+			for i := 0; i < len(turtles); i++ {
+				xOk := turtles[i].X <= theMonkey.X && turtles[i].X+turtles[i].Width >= theMonkey.X+theMonkey.Width
+				yOk := turtles[i].Y == 100
+				if xOk && yOk {
+					result = true
+				}
+			}
+		}
+	}
+	return result
 }
 
 func main() {
