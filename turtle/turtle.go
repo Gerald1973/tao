@@ -1,5 +1,13 @@
 package turtle
 
+import (
+	"image/color"
+
+	"github.com/hajimehoshi/ebiten"
+)
+
+var image *ebiten.Image
+
 type Turtle struct {
 	//Position of the upper left corner of the turtle
 	X int
@@ -13,6 +21,8 @@ type Turtle struct {
 	IncY int
 	//if true the turtle is sinking
 	IsSinking bool
+	//Image
+	Image *ebiten.Image
 }
 
 func (s *Turtle) Sink() {
@@ -31,12 +41,17 @@ func (s *Turtle) Sink() {
 	s.Y = s.Y + s.IncY
 }
 
-func BuildTurtle() Turtle {
+func Init() Turtle {
 	var tmp Turtle
 	tmp.Width = 41
 	tmp.Height = 10
 	tmp.Y = 100
 	tmp.IncY = 1
 	tmp.IsSinking = false
+	if image == nil {
+		image, _ = ebiten.NewImage(tmp.Width, tmp.Height, ebiten.FilterDefault)
+		image.Fill(color.RGBA{0, 200, 0, 255})
+	}
+	tmp.Image = image
 	return tmp
 }

@@ -13,11 +13,11 @@ import (
 )
 
 var background *ebiten.Image
-var turtleImage *ebiten.Image
-var drawOptions *ebiten.DrawImageOptions
+var backgroundDrawOptions *ebiten.DrawImageOptions
 var maxSinkingTurtles int = 1
 var turtleDrawImageOptions ebiten.DrawImageOptions
 var monkeyDrawImageOptions ebiten.DrawImageOptions
+var selectedTurtle int
 var turtles [4]turtle.Turtle
 var theMonkey monkey.Monkey
 
@@ -41,12 +41,9 @@ func init() {
 	theMonkey = *monkey.Init()
 
 	for i := 0; i < len(turtles); i++ {
-		turtles[i] = turtle.BuildTurtle()
+		turtles[i] = turtle.Init()
 		turtles[i].X = i * 45
 	}
-
-	turtleImage, _ = ebiten.NewImage(turtles[0].Width, turtles[1].Height, ebiten.FilterDefault)
-	turtleImage.Fill(color.RGBA{0, 200, 0, 255})
 
 	background, _ = ebiten.NewImage(320, 200, ebiten.FilterDefault)
 	background.Fill(color.White)
@@ -65,15 +62,13 @@ func init() {
 
 }
 
-var selectedTurtle int
-
 func update(screen *ebiten.Image) error {
 
 	if ebiten.IsDrawingSkipped() {
 		return nil
 	}
 	//The background
-	screen.DrawImage(background, drawOptions)
+	screen.DrawImage(background, backgroundDrawOptions)
 
 	//The turtles
 	if countSinkingTurtle(turtles) < maxSinkingTurtles {
@@ -92,7 +87,7 @@ func update(screen *ebiten.Image) error {
 			}
 		}
 		turtleDrawImageOptions.GeoM.Translate(float64(72+turtles[i].X), float64(turtles[i].Y))
-		screen.DrawImage(turtleImage, &turtleDrawImageOptions)
+		screen.DrawImage(turtles[i].Image, &turtleDrawImageOptions)
 	}
 	//The monkey
 	monkeyDrawImageOptions.GeoM.Reset()
