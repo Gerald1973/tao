@@ -111,7 +111,7 @@ func update(screen *ebiten.Image) error {
 		}
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		if !theMonkey.IsJumping {
+		if !theMonkey.IsJumping && isMonkeyOnGround() {
 			theMonkey.InitJump(false)
 		}
 	}
@@ -128,7 +128,7 @@ func isMonkeyOnGround() bool {
 		} else {
 			for i := 0; i < len(turtles); i++ {
 				xOk := turtles[i].X <= theMonkey.X && turtles[i].X+turtles[i].Width >= theMonkey.X+theMonkey.Width
-				yOk := turtles[i].Y == 100
+				yOk := turtles[i].Y < 100+turtles[i].Height/2
 				if xOk && yOk {
 					result = true
 				}
