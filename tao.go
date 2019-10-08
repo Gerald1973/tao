@@ -56,8 +56,8 @@ func init() {
 	background.DrawImage(leftBorder, leftBorderDrawOptions)
 
 	rightBorderDrawOptions := new(ebiten.DrawImageOptions)
-	rightBorderDrawOptions.GeoM.Translate(250, 100)
-	rightBorder, _ := ebiten.NewImage(properties.Borderwidth, 100, ebiten.FilterDefault)
+	rightBorderDrawOptions.GeoM.Translate(244, 100)
+	rightBorder, _ := ebiten.NewImage(properties.Borderwidth+6, 100, ebiten.FilterDefault)
 	rightBorder.Fill(color.RGBA{0, 255, 0, 255})
 	background.DrawImage(rightBorder, rightBorderDrawOptions)
 
