@@ -43,21 +43,21 @@ func init() {
 
 	for i := 0; i < len(turtles); i++ {
 		turtles[i] = turtle.Init()
-		turtles[i].X = i*43 + properties.Borderwidth + 2
+		turtles[i].X = i*(turtles[i].Width+properties.Gutter) + (properties.Borderwidth + properties.Gutter)
 	}
 
 	background, _ = ebiten.NewImage(properties.Screenwidth, properties.Screenheight, ebiten.FilterDefault)
 	background.Fill(color.White)
 
 	var leftBorderDrawOptions = new(ebiten.DrawImageOptions)
-	leftBorderDrawOptions.GeoM.Translate(0, 100)
+	leftBorderDrawOptions.GeoM.Translate(0, properties.Groundheight)
 	leftBorder, _ := ebiten.NewImage(properties.Borderwidth, 100, ebiten.FilterDefault)
 	leftBorder.Fill(color.RGBA{0, 255, 0, 255})
 	background.DrawImage(leftBorder, leftBorderDrawOptions)
 
 	rightBorderDrawOptions := new(ebiten.DrawImageOptions)
-	rightBorderDrawOptions.GeoM.Translate(244, 100)
-	rightBorder, _ := ebiten.NewImage(properties.Borderwidth+6, 100, ebiten.FilterDefault)
+	rightBorderDrawOptions.GeoM.Translate(247, properties.Groundheight)
+	rightBorder, _ := ebiten.NewImage(properties.Borderwidth, 100, ebiten.FilterDefault)
 	rightBorder.Fill(color.RGBA{0, 255, 0, 255})
 	background.DrawImage(rightBorder, rightBorderDrawOptions)
 

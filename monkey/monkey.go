@@ -52,7 +52,7 @@ func Init() *Monkey {
 
 //Reset reset the parameter to their initial state
 func (m *Monkey) Reset() {
-	m.X = 39
+	m.X = properties.Borderwidth - 32
 	m.Y = 50
 	m.Width = 20
 	m.Height = 50
