@@ -1,13 +1,14 @@
 package turtle
 
 import (
-	"image/color"
-
+	"../properties"
 	"github.com/hajimehoshi/ebiten"
+	"image/color"
 )
 
 var image *ebiten.Image
 
+//Turtle one turtle
 type Turtle struct {
 	//Position of the upper left corner of the turtle
 	X int
@@ -25,8 +26,9 @@ type Turtle struct {
 	Image *ebiten.Image
 }
 
+//Sink the turtle sinks
 func (s *Turtle) Sink() {
-	if s.Y == 100 {
+	if s.Y == properties.Groundheight {
 		if s.IncY == -1 {
 			s.IsSinking = false
 			s.IncY = 0
@@ -41,11 +43,12 @@ func (s *Turtle) Sink() {
 	s.Y = s.Y + s.IncY
 }
 
+//Init intialize and builds a turtle
 func Init() Turtle {
 	var tmp Turtle
 	tmp.Width = 41
 	tmp.Height = 10
-	tmp.Y = 100
+	tmp.Y = properties.Groundheight
 	tmp.IncY = 1
 	tmp.IsSinking = false
 	if image == nil {

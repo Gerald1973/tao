@@ -1,13 +1,14 @@
 package monkey
 
 import (
-	"image/color"
-
+	"../properties"
 	"github.com/hajimehoshi/ebiten"
+	"image/color"
 )
 
 var image *ebiten.Image
 
+//Monkey The Monkey is the lmain character from the game.
 type Monkey struct {
 	//Position of the upper left corner of the monkey
 	X int
@@ -29,13 +30,15 @@ type Monkey struct {
 	Image *ebiten.Image
 }
 
-var Jump [100]int
+//Jump contains the precalculate Y of the quadratic function
+var Jump [50]int
 
+//Init monkey initialisation and building
 func Init() *Monkey {
 	length := len(Jump)
 	for i := 0; i < length; i++ {
-		x := (float64(i+1) / float64(100)) * float64(47)
-		Jump[i] = int(-0.09054*x*x + 4.255*x)
+		x := (float64(i+1) / float64(len(Jump))) * float64(43)
+		Jump[i] = int(-0.1082*x*x + 4.654*x)
 	}
 	monkey := new(Monkey)
 	monkey.Reset()
@@ -47,8 +50,9 @@ func Init() *Monkey {
 	return monkey
 }
 
+//Reset reset the parameter to their initial state
 func (m *Monkey) Reset() {
-	m.X = 36
+	m.X = 39
 	m.Y = 50
 	m.Width = 20
 	m.Height = 50
@@ -57,25 +61,27 @@ func (m *Monkey) Reset() {
 	m.Direction = false
 }
 
+//InitJump initiate the monkey jumping
 func (m *Monkey) InitJump(direction bool) {
 	m.IsJumping = true
 	m.JumpingStart = m.X
 	m.Direction = direction
 }
 
+//Jump the monkey jumps
 func (m *Monkey) Jump() {
-	if m.IncJump == 99 {
+	if m.IncJump == len(Jump)-1 {
 		if m.Direction {
-			m.X = m.JumpingStart + 47
+			m.X = m.JumpingStart + 43
 		} else {
-			m.X = m.JumpingStart - 47
+			m.X = m.JumpingStart - 43
 		}
 		m.IsJumping = false
 		m.IncJump = -1
 	} else {
 		m.IncJump = m.IncJump + 1
-		m.Y = 100 - m.Height - Jump[m.IncJump]
-		floatX := float64(m.IncJump) / float64(100) * 47
+		m.Y = properties.Groundheight - m.Height - Jump[m.IncJump]
+		floatX := float64(m.IncJump) / float64(len(Jump)) * 43
 		if m.Direction {
 			m.X = int(floatX) + m.JumpingStart
 		} else {

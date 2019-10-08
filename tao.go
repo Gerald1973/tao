@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"./monkey"
+	"./properties"
 	"./turtle"
 
 	"github.com/hajimehoshi/ebiten"
@@ -42,21 +43,21 @@ func init() {
 
 	for i := 0; i < len(turtles); i++ {
 		turtles[i] = turtle.Init()
-		turtles[i].X = i*45 + 72
+		turtles[i].X = i*43 + properties.Borderwidth + 2
 	}
 
-	background, _ = ebiten.NewImage(320, 200, ebiten.FilterDefault)
+	background, _ = ebiten.NewImage(properties.Screenwidth, properties.Screenheight, ebiten.FilterDefault)
 	background.Fill(color.White)
 
 	var leftBorderDrawOptions = new(ebiten.DrawImageOptions)
 	leftBorderDrawOptions.GeoM.Translate(0, 100)
-	leftBorder, _ := ebiten.NewImage(70, 100, ebiten.FilterDefault)
+	leftBorder, _ := ebiten.NewImage(properties.Borderwidth, 100, ebiten.FilterDefault)
 	leftBorder.Fill(color.RGBA{0, 255, 0, 255})
 	background.DrawImage(leftBorder, leftBorderDrawOptions)
 
 	rightBorderDrawOptions := new(ebiten.DrawImageOptions)
 	rightBorderDrawOptions.GeoM.Translate(250, 100)
-	rightBorder, _ := ebiten.NewImage(70, 100, ebiten.FilterDefault)
+	rightBorder, _ := ebiten.NewImage(properties.Borderwidth, 100, ebiten.FilterDefault)
 	rightBorder.Fill(color.RGBA{0, 255, 0, 255})
 	background.DrawImage(rightBorder, rightBorderDrawOptions)
 
@@ -123,12 +124,12 @@ func isMonkeyOnGround() bool {
 	if theMonkey.Y == 50 {
 		if theMonkey.X < 70 {
 			result = true
-		} else if theMonkey.X+theMonkey.Width > 320-70 {
+		} else if theMonkey.X+theMonkey.Width > properties.Screenwidth-properties.Borderwidth {
 			result = true
 		} else {
 			for i := 0; i < len(turtles); i++ {
 				xOk := turtles[i].X <= theMonkey.X && turtles[i].X+turtles[i].Width >= theMonkey.X+theMonkey.Width
-				yOk := turtles[i].Y < 100+turtles[i].Height/2
+				yOk := turtles[i].Y < properties.Groundheight+turtles[i].Height/2
 				if xOk && yOk {
 					result = true
 				}
@@ -139,7 +140,7 @@ func isMonkeyOnGround() bool {
 }
 
 func main() {
-	if err := ebiten.Run(update, 320, 240, 2, "Tao"); err != nil {
+	if err := ebiten.Run(update, properties.Screenwidth, 240, 2, "Tao"); err != nil {
 		log.Fatal(err)
 	}
 }
