@@ -121,7 +121,7 @@ func update(screen *ebiten.Image) error {
 
 func isMonkeyOnGround() bool {
 	result := false
-	if theMonkey.Y == 50 {
+	if theMonkey.Y == 57 {
 		if theMonkey.X < 70 {
 			result = true
 		} else if theMonkey.X+theMonkey.Width > properties.Screenwidth-properties.Borderwidth {

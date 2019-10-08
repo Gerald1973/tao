@@ -3,7 +3,9 @@ package monkey
 import (
 	"../properties"
 	"github.com/hajimehoshi/ebiten"
-	"image/color"
+	"github.com/hajimehoshi/ebiten/ebitenutil"
+	_ "image/png"
+	"log"
 )
 
 var image *ebiten.Image
@@ -42,9 +44,9 @@ func Init() *Monkey {
 	}
 	monkey := new(Monkey)
 	monkey.Reset()
-	if image == nil {
-		image, _ = ebiten.NewImage(monkey.Width, monkey.Height, ebiten.FilterDefault)
-		image.Fill(color.Black)
+	image, _, err := ebitenutil.NewImageFromFile("assets/monkey.png", ebiten.FilterDefault)
+	if err != nil {
+		log.Fatal(err)
 	}
 	monkey.Image = image
 	return monkey
@@ -53,9 +55,9 @@ func Init() *Monkey {
 //Reset reset the parameter to their initial state
 func (m *Monkey) Reset() {
 	m.X = properties.Borderwidth - 32
-	m.Y = 50
-	m.Width = 20
-	m.Height = 50
+	m.Y = 57
+	m.Width = 32
+	m.Height = 43
 	m.IncJump = -1
 	m.IsJumping = false
 	m.Direction = false
